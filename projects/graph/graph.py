@@ -148,7 +148,7 @@ class Graph:
                     return path
                 # Mark it as visited...
                 self.visited.add(vertex)
-                # Then add A PATH TO its neighbors to the back of the queue
+                # Then add A PATH TO its neighbors to the back of the stack
                 for neighbor in self.vertices[vertex]:
                     # COPY THE PATH
                     new_path = path.copy()
