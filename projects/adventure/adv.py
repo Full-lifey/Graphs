@@ -88,7 +88,6 @@ while len(visited) < len(roomGraph):
         player.travel(direction)
         room = player.currentRoom
         visited.add(room.id)
-        print(player.currentRoom)
 # print(traversalPath)
 # for move in traversalPath:
 #     player.travel(move)
