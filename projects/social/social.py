@@ -1,8 +1,11 @@
+import random
+from util import Queue
 
 
 class User:
     def __init__(self, name):
         self.name = name
+
 
 class SocialGraph:
     def __init__(self):
@@ -47,8 +50,25 @@ class SocialGraph:
         # !!!! IMPLEMENT ME
 
         # Add users
+        for i in range(numUsers):
+            self.addUser(F'User {i+1}')
 
         # Create friendships
+        # totalFriendships = avgFriendships * numUsers
+        # Generate a list of all possible friendships
+        possible_friendships = []
+        # avoid duplicates by ensuring the first ID is smaller than the second
+        for userID in self.users:
+            for friendID in range(userID + 1, self.lastID + 1):
+                possible_friendships.append((userID, friendID))
+        # Shuffle the list
+        random.shuffle(possible_friendships)
+
+        total_friendships = avgFriendships * numUsers // 2
+        # Slice off excess friendships, implement the rest
+        for i in range(total_friendships):
+            friendship = possible_friendships[i]
+            self.addFriendship(friendship[0], friendship[1])
 
     def getAllSocialPaths(self, userID):
         """
@@ -61,12 +81,33 @@ class SocialGraph:
         """
         visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
+
+        # Implement a queue and add an array of the first userID
+        q = Queue()
+        q.enqueue([userID])
+        # While queue has items
+        while q.size() > 0:
+            # dequeue item
+            route = q.dequeue()
+            node = route[-1]
+            # Add it to visted with last item as key and route array as value
+            visited[node] = route
+            # Find and Loop over neighbors
+            for neighbor in self.friendships[node]:
+                # if neighbor has not been visited
+                if neighbor not in visited.keys():
+                    # Make a copy of route array
+                    new_route = route.copy()
+                    # Append neighbor to route
+                    new_route.append(neighbor)
+                    # Add route to queue
+                    q.enqueue(new_route)
         return visited
 
 
 if __name__ == '__main__':
     sg = SocialGraph()
-    sg.populateGraph(10, 2)
+    sg.populateGraph(1000, 5)
     print(sg.friendships)
     connections = sg.getAllSocialPaths(1)
     print(connections)
